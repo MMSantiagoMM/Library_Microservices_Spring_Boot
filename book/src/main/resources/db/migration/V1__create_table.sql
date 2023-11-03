@@ -1,6 +1,7 @@
 CREATE TABLE "books"(
 id SERIAL NOT NULL PRIMARY KEY,
-name VARCHAR(40),
+title VARCHAR(40),
 writer VARCHAR(40),
+year VARCHAR(10),
 price FLOAT
 );

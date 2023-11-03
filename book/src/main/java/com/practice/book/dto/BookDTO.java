@@ -6,25 +6,19 @@ import lombok.*;
 
 @Data
 public class BookDTO {
-    private Integer id;
-    private String name;
+
+    private String title;
     private String writer;
+    private String year;
     private Double price;
 
-    public Integer getId() {
-        return id;
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getWriter() {
@@ -33,6 +27,14 @@ public class BookDTO {
 
     public void setWriter(String writer) {
         this.writer = writer;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public Double getPrice() {

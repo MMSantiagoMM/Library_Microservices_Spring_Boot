@@ -48,8 +48,8 @@ public class BookService {
         }));
     }
 
-    public Optional<Book>getName(String name){
-        return Optional.ofNullable(repository.findByName(name));
+    public Optional<Book> getByTitle(String name){
+        return Optional.ofNullable(repository.findByTitle(name));
     }
 
     public Optional<Book>getWriter(String writer){
@@ -59,8 +59,9 @@ public class BookService {
     public Book updateValue(BookDTO newBook, Integer id){
         return repository.findById(id)
                 .map(book -> {
-                    book.setName(newBook.getName());
+                    book.setTitle(newBook.getTitle());
                     book.setWriter(newBook.getWriter());
+                    book.setYear(newBook.getYear());
                     book.setPrice(newBook.getPrice());
                     return repository.save(book);
                 }).orElseThrow(()-> new BookNotFoundException(id) {

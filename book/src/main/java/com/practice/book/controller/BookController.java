@@ -3,17 +3,13 @@ package com.practice.book.controller;
 
 import com.practice.book.dto.BookDTO;
 import com.practice.book.entity.Book;
-import com.practice.book.exceptions.BookNotFoundException;
 import com.practice.book.repository.BookRepository;
 import com.practice.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.JsonPath;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -49,9 +45,9 @@ public class BookController {
         return service.getOneBook(id);
     }
 
-    @GetMapping("/name/{name}")
-    Optional<Book>getName(@PathVariable String name){
-        return service.getName(name);
+    @GetMapping("/name/{title}")
+    Optional<Book>getName(@PathVariable String title){
+        return service.getByTitle(title);
     }
 
     @GetMapping("writer/{writer}")
