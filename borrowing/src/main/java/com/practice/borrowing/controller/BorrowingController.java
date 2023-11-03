@@ -1,10 +1,37 @@
 package com.practice.borrowing.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.practice.borrowing.dto.BorrowingDTO;
+import com.practice.borrowing.entity.Borrowing;
+import com.practice.borrowing.service.BorrowingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("library")
 public class BorrowingController {
+
+    @Autowired
+    private BorrowingService service;
+
+
+    @GetMapping("/get_alls")
+    List<Borrowing>getAll(){
+        return service.getAllBorrowings();
+    }
+
+    @GetMapping("/get_one/{id}")
+    Optional<Borrowing> getOne(@PathVariable String id){
+        return service.getOne(id);
+    }
+
+    @PostMapping("/insert")
+    String create(BorrowingDTO borrowingDTO){
+        return service.insert(borrowingDTO);
+    }
+
+
 }

@@ -3,19 +3,21 @@ package com.practice.borrowing.dto;
 
 import com.practice.borrowing.feign.Book;
 import com.practice.borrowing.feign.User;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 
+
+@Data
 public class BorrowingDTO {
 
     private String id;
-    private User user;
 
-    private ArrayList<Book> books;
+    private Integer user;
 
-    private LocalDate beginingDate;
+    private Integer books;
 
-    private LocalDate endDate;
 
 }

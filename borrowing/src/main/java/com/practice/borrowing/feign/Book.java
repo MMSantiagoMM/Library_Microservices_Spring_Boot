@@ -1,7 +1,9 @@
 package com.practice.borrowing.feign;
 
 
+import lombok.Data;
 
+@Data
 public class Book {
 
     private String title;
