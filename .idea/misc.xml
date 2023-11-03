@@ -6,7 +6,17 @@
       <list>
         <option value="$PROJECT_DIR$/book/pom.xml" />
         <option value="$PROJECT_DIR$/user/pom.xml" />
+        <option value="$PROJECT_DIR$/../borrowing/pom.xml" />
+        <option value="$PROJECT_DIR$/../borrowing/borrowing/pom.xml" />
+        <option value="$PROJECT_DIR$/../borrowing/untitled/pom.xml" />
+        <option value="$PROJECT_DIR$/borrowing/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../borrowing/borrowing/pom.xml" />
+        <option value="$PROJECT_DIR$/../borrowing/untitled/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_20" default="true" project-jdk-name="20" project-jdk-type="JavaSDK">

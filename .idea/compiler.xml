@@ -2,6 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="borrowing" />
+      </profile>
       <profile name="Annotation profile for user" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -14,10 +20,17 @@
         <module name="book" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="borrowing (1) (org.example)" target="20" />
+      <module name="borrowing (2) (com.practice)" target="17" />
+      <module name="untitled" target="20" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="book" options="-parameters" />
+      <module name="borrowing" options="-parameters" />
+      <module name="borrowing (2) (com.practice)" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>

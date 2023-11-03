@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="borrowing">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../borrowing/target/borrowing.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
