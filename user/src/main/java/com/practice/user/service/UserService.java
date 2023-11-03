@@ -49,7 +49,7 @@ public class UserService {
         user.map(newUser -> {
             newUser.setName(userDTO.getName());
             newUser.setDocument(userDTO.getDocument());
-            newUser.setTelephone(userDTO.getTelephone());
+            newUser.setPhoneNumber(userDTO.getPhoneNumber());
             return repository.save(newUser);
 
         }).orElseThrow(() -> new UserNotFoundException(id));

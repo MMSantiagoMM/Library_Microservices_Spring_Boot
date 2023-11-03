@@ -13,7 +13,7 @@ public class User {
     private Integer id;
     private String name;
     private String document;
-    private String telephone;
+    private String phoneNumber;
 
     public Integer getId() {
         return id;
@@ -39,11 +39,11 @@ public class User {
         this.document = document;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

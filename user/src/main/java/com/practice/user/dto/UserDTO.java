@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserDTO {
     private String name;
     private String document;
-    private String telephone;
+    private String phoneNumber;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class UserDTO {
         this.document = document;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
