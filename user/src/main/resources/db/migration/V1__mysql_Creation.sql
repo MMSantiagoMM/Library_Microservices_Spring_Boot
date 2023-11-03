@@ -1,0 +1,6 @@
+CREATE TABLE users (
+id INTEGER AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR (40),
+document VARCHAR (40),
+telephone VARCHAR(50)
+);

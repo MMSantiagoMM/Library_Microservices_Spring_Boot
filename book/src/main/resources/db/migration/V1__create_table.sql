@@ -1,0 +1,6 @@
+CREATE TABLE "books"(
+id SERIAL NOT NULL PRIMARY KEY,
+name VARCHAR(40),
+writer VARCHAR(40),
+price FLOAT
+);
