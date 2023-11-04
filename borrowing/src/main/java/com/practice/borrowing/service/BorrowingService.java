@@ -41,7 +41,10 @@ public class BorrowingService {
         Borrowing borrowing = new Borrowing();
         borrowing.setId(borrowingDTO.getId());
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
-        borrowing.setBooks(bookFeign.getOne(borrowingDTO.getBooks()));
+
+        //borrowing.setBooks(bookFeign.getOne(borrowingDTO.getBooks()));
+        //borrowing.setBooks(bookFeign.getOne(borrowingDTO.getBooks()));
+
         borrowing.setBeginingDate(LocalDate.now());
         borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
 

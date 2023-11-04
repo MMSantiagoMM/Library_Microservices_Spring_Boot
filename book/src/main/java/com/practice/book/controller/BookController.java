@@ -50,11 +50,15 @@ public class BookController {
         return service.getByTitle(title);
     }
 
-    @GetMapping("writer/{writer}")
+    @GetMapping("/writer/{writer}")
     Optional<Book>getWriter(@PathVariable String writer){
         return service.getWriter(writer);
     }
 
+    @GetMapping("/get_several/{values}")
+    List<Book> getSeveral(@PathVariable Integer[] values){
+        return service.returnSeveral(values);
+    }
     @PutMapping("/update/{id}")
     Optional<Book>update(@RequestBody BookDTO newBook, @PathVariable Integer id){
         return Optional.ofNullable(service.updateValue(newBook, id));
@@ -69,5 +73,7 @@ public class BookController {
     String delete (@PathVariable Integer id){
         return service.deelteBook(id);
     }
+
+
 
 }

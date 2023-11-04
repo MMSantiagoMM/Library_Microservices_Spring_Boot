@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,6 +90,11 @@ public class BookService {
             return repository.save(existingBook.get());
         }
         return null;
+    }
+
+    public List<Book> returnSeveral(Integer[]values){
+        List<Integer> values2 = List.of(values);
+        return repository.findAllById(values2);
     }
 
 }
