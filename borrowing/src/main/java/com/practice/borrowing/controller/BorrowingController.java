@@ -31,7 +31,7 @@ public class BorrowingController {
     private BookFileService bookFileService;
 
 
-    @GetMapping("/get_alls")
+    @GetMapping("/get_all")
     List<Borrowing>getAll(){
         return service.getAllBorrowings();
     }
