@@ -46,5 +46,10 @@ public class BorrowingController {
         return "The borrowing's field was updated";
     }
 
+    @DeleteMapping("/delete/{id}")
+    String delete(@PathVariable Integer id){
+        return service.deleteBorrowing(id);
+    }
+
 
 }

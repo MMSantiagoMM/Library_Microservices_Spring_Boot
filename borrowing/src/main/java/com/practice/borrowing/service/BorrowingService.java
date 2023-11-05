@@ -88,6 +88,16 @@ public class BorrowingService {
         return null;
     }
 
+    public String deleteBorrowing(Integer id){
+        Optional<Borrowing> existBorrowing = repository.findById(id);
+
+        if(existBorrowing.isPresent()){
+            repository.delete(existBorrowing.get());
+            return "The borrowing was deleted successfully";
+        }
+        return "Resource was not found";
+    }
+
 
 
 
