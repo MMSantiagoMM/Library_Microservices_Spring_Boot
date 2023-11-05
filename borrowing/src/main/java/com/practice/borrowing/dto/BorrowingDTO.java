@@ -14,7 +14,7 @@ import java.util.Collections;
 @Data
 public class BorrowingDTO {
 
-    private String id;
+    //private String id;
 
     private Integer user;
 

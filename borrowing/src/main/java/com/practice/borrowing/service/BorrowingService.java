@@ -10,9 +10,13 @@ import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import javax.swing.text.html.Option;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,19 +31,23 @@ public class BorrowingService {
     @Autowired
     private UserFeign userFeign;
 
+    @Autowired
+    private SequenceGeneratorService sequence;
+
 
     public List<Borrowing> getAllBorrowings(){
         return repository.findAll();
     }
 
-    public Optional<Borrowing> getOne(String id){
+    public Optional<Borrowing> getOne(Integer id){
         return Optional.of(repository.findById(id)).orElseThrow(
                 ()->new BorrowingNotFoundException(id));
     }
 
     public String insert(BorrowingDTO borrowingDTO){
         Borrowing borrowing = new Borrowing();
-        borrowing.setId(borrowingDTO.getId());
+        //borrowing.setId(borrowingDTO.getId());
+        borrowing.setId(sequence.getSequenceNumber(Borrowing.SEQUENCE_NAME));
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
         borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
         borrowing.setBeginingDate(LocalDate.now());
@@ -54,10 +62,10 @@ public class BorrowingService {
                 Book::getPrice).sum();
     }
 
-    public Optional<Borrowing> updateBorrowing(BorrowingDTO borrowingDTO, String id){
+    public Optional<Borrowing> updateBorrowing(BorrowingDTO borrowingDTO, Integer id){
         return Optional.ofNullable(repository.findById(id)
                 .map(borrowing -> {
-                    borrowing.setId(borrowingDTO.getId());
+                    borrowing.setId(borrowing.getId());
                     borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
                     borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
                     borrowing.setBeginingDate(LocalDate.now());
@@ -65,6 +73,19 @@ public class BorrowingService {
                     borrowing.setTotalPrice(calculateTotalPrice(borrowing));
                     return repository.save(borrowing);
                 }).orElseThrow(() -> new BorrowingNotFoundException(id)));
+    }
+
+    public Borrowing updateByField(Integer id, Map<String,Object> fields){
+        Optional<Borrowing> existingBorrowing = repository.findById(id);
+        if(existingBorrowing.isPresent()){
+            fields.forEach((key,value)->{
+                Field field = ReflectionUtils.findField(Borrowing.class,key);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field,existingBorrowing.get(),value);
+            });
+            return repository.save(existingBorrowing.get());
+        }
+        return null;
     }
 
 
