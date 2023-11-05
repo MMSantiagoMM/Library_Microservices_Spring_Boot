@@ -34,4 +34,6 @@ public class Borrowing {
 
     private Double totalPrice;
 
+    private BookFile bookFile;
+
 }

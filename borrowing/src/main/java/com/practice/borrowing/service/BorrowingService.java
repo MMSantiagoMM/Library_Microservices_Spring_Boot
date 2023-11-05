@@ -1,6 +1,8 @@
 package com.practice.borrowing.service;
 
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.practice.borrowing.dto.BorrowingDTO;
 import com.practice.borrowing.entity.Borrowing;
 import com.practice.borrowing.exceptions.BorrowingNotFoundException;
@@ -9,10 +11,14 @@ import com.practice.borrowing.feign.BookFeign;
 import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +39,8 @@ public class BorrowingService {
 
     @Autowired
     private SequenceGeneratorService sequence;
+
+
 
 
     public List<Borrowing> getAllBorrowings(){
@@ -97,6 +105,8 @@ public class BorrowingService {
         }
         return "Resource was not found";
     }
+
+
 
 
 

@@ -2,11 +2,20 @@ package com.practice.borrowing.controller;
 
 
 import com.practice.borrowing.dto.BorrowingDTO;
+import com.practice.borrowing.entity.BookFile;
 import com.practice.borrowing.entity.Borrowing;
+import com.practice.borrowing.service.BookFileService;
 import com.practice.borrowing.service.BorrowingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +26,9 @@ public class BorrowingController {
 
     @Autowired
     private BorrowingService service;
+
+    @Autowired
+    private BookFileService bookFileService;
 
 
     @GetMapping("/get_alls")
@@ -49,6 +61,21 @@ public class BorrowingController {
     @DeleteMapping("/delete/{id}")
     String delete(@PathVariable Integer id){
         return service.deleteBorrowing(id);
+    }
+
+    @PostMapping("/insert_image")
+    ResponseEntity<?> uploadBook(@RequestParam("file")MultipartFile file)throws IOException{
+        return new ResponseEntity<>(bookFileService.addFile(file), HttpStatus.OK);
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
+        BookFile loadFile = bookFileService.downloadFile(id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(loadFile.getFileType() ))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + loadFile.getFilename() + "\"")
+                .body(new ByteArrayResource(loadFile.getFile()));
     }
 
 
