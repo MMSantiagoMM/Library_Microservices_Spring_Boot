@@ -4,6 +4,7 @@ package com.practice.borrowing.dto;
 import com.practice.borrowing.feign.Book;
 import com.practice.borrowing.feign.User;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,13 +18,6 @@ public class BorrowingDTO {
 
     private Integer user;
 
-    private ArrayList<Integer> books;
+    private Integer[] books;
 
-    public ArrayList<Integer> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Integer ... values) {
-        Collections.addAll(books,values);
-    }
 }

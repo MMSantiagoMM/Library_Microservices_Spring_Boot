@@ -4,9 +4,11 @@ package com.practice.borrowing.service;
 import com.practice.borrowing.dto.BorrowingDTO;
 import com.practice.borrowing.entity.Borrowing;
 import com.practice.borrowing.exceptions.BorrowingNotFoundException;
+import com.practice.borrowing.feign.Book;
 import com.practice.borrowing.feign.BookFeign;
 import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
+import jakarta.validation.constraints.Max;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,7 @@ public class BorrowingService {
     }
 
     public Optional<Borrowing> getOne(String id){
-        return Optional.ofNullable(repository.findById(id)).orElseThrow(
+        return Optional.of(repository.findById(id)).orElseThrow(
                 ()->new BorrowingNotFoundException(id));
     }
 
@@ -42,13 +44,14 @@ public class BorrowingService {
         borrowing.setId(borrowingDTO.getId());
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
 
-        //borrowing.setBooks(bookFeign.getOne(borrowingDTO.getBooks()));
-        //borrowing.setBooks(bookFeign.getOne(borrowingDTO.getBooks()));
+        borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
 
         borrowing.setBeginingDate(LocalDate.now());
         borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
 
         repository.save(borrowing);
+
+        
 
         return "The borrowing was created successfully";
     }
