@@ -63,7 +63,7 @@ public class BorrowingController {
         return service.deleteBorrowing(id);
     }
 
-    @PostMapping("/insert_image")
+    @PostMapping("/insert_book")
     ResponseEntity<?> uploadBook(@RequestParam("file")MultipartFile file)throws IOException{
         return new ResponseEntity<>(bookFileService.addFile(file), HttpStatus.OK);
     }
