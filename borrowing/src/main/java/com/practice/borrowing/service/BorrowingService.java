@@ -8,12 +8,10 @@ import com.practice.borrowing.feign.Book;
 import com.practice.borrowing.feign.BookFeign;
 import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
-import jakarta.validation.constraints.Max;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,27 +41,30 @@ public class BorrowingService {
         Borrowing borrowing = new Borrowing();
         borrowing.setId(borrowingDTO.getId());
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
-
         borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
-
         borrowing.setBeginingDate(LocalDate.now());
         borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
-
         borrowing.setTotalPrice(calculateTotalPrice(borrowing));
-
         repository.save(borrowing);
-
-
-
         return "The borrowing was created successfully";
     }
-
-
-
 
     public Double calculateTotalPrice(Borrowing borrowing){
         return borrowing.getBooks().stream().mapToDouble(
                 Book::getPrice).sum();
+    }
+
+    public Optional<Borrowing> updateBorrowing(BorrowingDTO borrowingDTO, String id){
+        return Optional.ofNullable(repository.findById(id)
+                .map(borrowing -> {
+                    borrowing.setId(borrowingDTO.getId());
+                    borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
+                    borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
+                    borrowing.setBeginingDate(LocalDate.now());
+                    borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
+                    borrowing.setTotalPrice(calculateTotalPrice(borrowing));
+                    return repository.save(borrowing);
+                }).orElseThrow(() -> new BorrowingNotFoundException(id)));
     }
 
 

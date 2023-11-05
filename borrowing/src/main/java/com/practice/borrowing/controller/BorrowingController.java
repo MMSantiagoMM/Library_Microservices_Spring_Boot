@@ -29,8 +29,14 @@ public class BorrowingController {
     }
 
     @PostMapping("/insert")
-    String create(BorrowingDTO borrowingDTO){
+    String create(@RequestBody BorrowingDTO borrowingDTO){
         return service.insert(borrowingDTO);
+    }
+
+    @PutMapping("/update/{id}")
+    String update (@RequestBody BorrowingDTO newBorrowing, @PathVariable String id){
+        service.updateBorrowing(newBorrowing,id);
+        return "The borrowing was update successfully";
     }
 
 
