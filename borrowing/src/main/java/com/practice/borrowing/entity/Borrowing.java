@@ -28,4 +28,6 @@ public class Borrowing {
 
     private LocalDate endDate;
 
+    private Double totalPrice;
+
 }

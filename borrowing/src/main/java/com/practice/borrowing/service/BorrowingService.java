@@ -49,11 +49,21 @@ public class BorrowingService {
         borrowing.setBeginingDate(LocalDate.now());
         borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
 
+        borrowing.setTotalPrice(calculateTotalPrice(borrowing));
+
         repository.save(borrowing);
 
-        
+
 
         return "The borrowing was created successfully";
+    }
+
+
+
+
+    public Double calculateTotalPrice(Borrowing borrowing){
+        return borrowing.getBooks().stream().mapToDouble(
+                Book::getPrice).sum();
     }
 
 
