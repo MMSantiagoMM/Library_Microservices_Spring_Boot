@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("library")
+@RequestMapping("borrowing")
 public class BorrowingController {
 
     @Autowired
