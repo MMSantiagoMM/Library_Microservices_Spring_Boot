@@ -1,0 +1,93 @@
+services:
+  api-gateway:
+    build: .
+    image: api-gateway-image
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    ports:
+      - "8080:8080"
+    networks:
+      - library-network
+    depends_on:
+      - eureka-server
+
+  eureka-server:
+    image: eureka-server-image
+    ports:
+      - "8761:8761"
+    networks:
+      - library-network
+
+
+  user-app:
+    image: user-service-image
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    ports:
+      - "8082:8082"
+    networks:
+      - library-network
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: mysqldb
+    networks:
+      - library-network
+
+
+  borrowing-app:
+    image: borrowing-service-image
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    ports:
+      - "8083:8083"
+    networks:
+      - library-network
+    depends_on:
+      - mongo_db
+
+  mongo_db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mongo_db
+    networks:
+      - library-network
+
+
+  book-app:
+    image: book-service-image
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - DATABASE_URL=jdbc:postgresql://postgres_db:5432/postgres2
+      - DATABASE_USERNAME=postgres2
+      - DATABASE_PASSWORD=postgres2
+    ports:
+      - "8081:8081"
+    networks:
+      - library-network
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres2
+      POSTGRES_PASSWORD: postgres2
+      POSTGRES_DB: postgres2
+    networks:
+      - library-network
+
+networks:
+  library-network:
