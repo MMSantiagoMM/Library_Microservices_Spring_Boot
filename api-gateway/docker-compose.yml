@@ -27,6 +27,8 @@ services:
       - "8082:8082"
     networks:
       - library-network
+    restart:
+      always
     depends_on:
       - mysqldb
 
