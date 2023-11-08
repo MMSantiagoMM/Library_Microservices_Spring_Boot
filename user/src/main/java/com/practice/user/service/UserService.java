@@ -39,26 +39,24 @@ public class UserService {
         return repository.findAll();
     }
 
-    public String insert(UserDTO userDTO) {
-        repository.save(mapper.toUser(userDTO));
-        return "The user was created correctly";
+    public User insert(UserDTO userDTO) {
+        return repository.save(mapper.toUser(userDTO));
     }
 
     public Optional<User> update(UserDTO userDTO, Integer id) {
-        Optional<User> user = repository.findById(id);
-        user.map(newUser -> {
-            newUser.setName(userDTO.getName());
-            newUser.setDocument(userDTO.getDocument());
-            newUser.setPhoneNumber(userDTO.getPhoneNumber());
-            return repository.save(newUser);
-
-        }).orElseThrow(() -> new UserNotFoundException(id));
-        return null;
+        return Optional.ofNullable(repository.findById(id)
+                .map(user -> {
+                    user.setName(userDTO.getName());
+                    user.setDocument(userDTO.getDocument());
+                    user.setPhoneNumber(userDTO.getPhoneNumber());
+                    return repository.save(user);
+                }).orElseThrow(()-> new UserNotFoundException(id)));
     }
+
+
 
     public Optional<User> updateByField(Integer id, Map<String, Object> fields) {
         Optional<User> existingUser = repository.findById(id);
-
         if (existingUser.isPresent()) {
             fields.forEach((key, value) -> {
                 Field field = ReflectionUtils.findField(User.class, key);
@@ -66,18 +64,18 @@ public class UserService {
                 ReflectionUtils.setField(field, existingUser.get(), value);
 
             });
-            repository.save(existingUser.get());
+            return Optional.of(repository.save(existingUser.get()));
         }
         return null;
     }
 
-    public String deleteUser(Integer id) {
+    public Boolean deleteUser(Integer id) {
         Optional<User> user = Optional.ofNullable(repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(id)));
         if(user.isPresent()){
             repository.deleteById(id);
-            return "User was deleted successfully";
+            return true;
         }
-        return "User doesn't found";
+        return false;
     }
 }

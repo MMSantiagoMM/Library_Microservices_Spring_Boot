@@ -5,6 +5,8 @@ import com.practice.user.dto.UserDTO;
 import com.practice.user.entity.User;
 import com.practice.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,32 +25,44 @@ public class UserController {
     }
 
     @GetMapping("/get_one/{id}")
-    Optional<User> getOne(@PathVariable Integer id){
-        return service.getOne(id);
+    ResponseEntity<User> getOne(@PathVariable Integer id){
+        return service.getOne(id)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/get_all")
-    List<User> getAll(){
-        return service.getAll();
+    ResponseEntity<List<User>> getAll(){
+        List<User> users = service.getAll();
+        return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
     @PostMapping("/insert")
-    String createUser(@RequestBody UserDTO userDTO){
-        return service.insert(userDTO);
+    ResponseEntity<User> createUser(@RequestBody UserDTO userDTO){
+        User user = service.insert(userDTO);
+        return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    Optional<User>update(@PathVariable Integer id, @RequestBody UserDTO newUser){
-        return service.update(newUser,id);
+    ResponseEntity<User>update(@PathVariable Integer id, @RequestBody UserDTO newUser){
+        return service.update(newUser,id)
+                .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PatchMapping("/update_field/{id}")
-    Optional<User>updateByField(@PathVariable Integer id, @RequestBody Map<String, Object>fields){
-        return service.updateByField(id,fields);
+    ResponseEntity<User>updateByField(@PathVariable Integer id, @RequestBody Map<String, Object>fields){
+        return service.updateByField(id,fields)
+                .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/delete/{id}")
-    String deleteUser(@PathVariable Integer id){
-        return service.deleteUser(id);
+    ResponseEntity<Void> deleteUser(@PathVariable Integer id){
+        if(service.deleteUser(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
