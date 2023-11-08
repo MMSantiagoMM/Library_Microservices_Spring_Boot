@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "book-service", url = "http://localhost:8081", path = "library")
+@FeignClient(name = "book-service", url = "http://localhost:8081", path = "book")
 public interface BookFeign {
     @GetMapping("/get_one/{id}")
     Book getOne(@PathVariable Integer id);

@@ -6,6 +6,7 @@ import com.practice.borrowing.entity.BookFile;
 import com.practice.borrowing.entity.Borrowing;
 import com.practice.borrowing.service.BookFileService;
 import com.practice.borrowing.service.BorrowingService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -32,35 +33,48 @@ public class BorrowingController {
 
 
     @GetMapping("/get_all")
-    List<Borrowing>getAll(){
-        return service.getAllBorrowings();
+    ResponseEntity<List<Borrowing>>getAll(){
+        List<Borrowing> borrowings = service.getAllBorrowings();
+        return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
     @GetMapping("/get_one/{id}")
-    Optional<Borrowing> getOne(@PathVariable Integer id){
-        return service.getOne(id);
+    ResponseEntity<Borrowing> getOne(@PathVariable Integer id){
+        return service.getOne(id)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/insert")
-    String create(@RequestBody BorrowingDTO borrowingDTO){
-        return service.insert(borrowingDTO);
+    ResponseEntity<Borrowing>create(@RequestBody BorrowingDTO borrowingDTO){
+        Borrowing borrowing = service.insert(borrowingDTO);
+        return new ResponseEntity<>(borrowing, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    String update (@RequestBody BorrowingDTO newBorrowing, @PathVariable Integer id){
-        service.updateBorrowing(newBorrowing,id);
-        return "The borrowing was update successfully";
+    ResponseEntity<Borrowing> update (@RequestBody BorrowingDTO newBorrowing, @PathVariable Integer id){
+        return service.updateBorrowing(newBorrowing,id)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
     }
 
     @PatchMapping("/update_field/{id}")
-    String updateByField(@PathVariable Integer id, @RequestBody Map<String,Object>fields){
-        service.updateByField(id,fields);
-        return "The borrowing's field was updated";
+    ResponseEntity<Borrowing> updateByField(@PathVariable Integer id, @RequestBody Map<String,Object>fields){
+        return service.updateByField(id,fields)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+
     }
 
     @DeleteMapping("/delete/{id}")
-    String delete(@PathVariable Integer id){
-        return service.deleteBorrowing(id);
+    ResponseEntity<Void> delete(@PathVariable Integer id){
+        if(service.deleteBorrowing(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/insert_book")
@@ -71,7 +85,6 @@ public class BorrowingController {
     @GetMapping("/download/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
         BookFile loadFile = bookFileService.downloadFile(id);
-
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(loadFile.getFileType() ))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + loadFile.getFilename() + "\"")
