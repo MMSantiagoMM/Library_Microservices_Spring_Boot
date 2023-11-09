@@ -32,26 +32,26 @@ public class BorrowingController {
     private BookFileService bookFileService;
 
 
-    @GetMapping("/get_all")
+    @GetMapping
     ResponseEntity<List<Borrowing>>getAll(){
         List<Borrowing> borrowings = service.getAllBorrowings();
         return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
-    @GetMapping("/get_one/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<Borrowing> getOne(@PathVariable Integer id){
         return service.getOne(id)
                 .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/insert")
+    @PostMapping
     ResponseEntity<Borrowing>create(@RequestBody BorrowingDTO borrowingDTO){
         Borrowing borrowing = service.insert(borrowingDTO);
         return new ResponseEntity<>(borrowing, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<Borrowing> update (@RequestBody BorrowingDTO newBorrowing, @PathVariable Integer id){
         return service.updateBorrowing(newBorrowing,id)
                 .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
@@ -59,7 +59,7 @@ public class BorrowingController {
 
     }
 
-    @PatchMapping("/update_field/{id}")
+    @PatchMapping("/{id}")
     ResponseEntity<Borrowing> updateByField(@PathVariable Integer id, @RequestBody Map<String,Object>fields){
         return service.updateByField(id,fields)
                 .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
@@ -68,7 +68,7 @@ public class BorrowingController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable Integer id){
         if(service.deleteBorrowing(id)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -32,19 +32,19 @@ public class BookController {
         this.repository = repository;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Book> insert(@RequestBody BookDTO book){
         Book createdBook = service.createBook(book);
         return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get_books")
+    @GetMapping
     public ResponseEntity<List<Book>> getAll(){
         List<Book> books = service.getBooks();
         return new ResponseEntity<>(books,HttpStatus.OK);
     }
 
-    @GetMapping("/get_one/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<Book>getOne(@PathVariable Integer id){
         return service.getOneBook(id)
                 .map(task -> new ResponseEntity<>(task, HttpStatus.OK))
@@ -70,21 +70,21 @@ public class BookController {
         List<Book> books = service.returnSeveral(values);
         return new ResponseEntity<>(books,HttpStatus.OK);
     }
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<Book>update(@RequestBody BookDTO newBook, @PathVariable Integer id){
         return service.updateValue(newBook, id)
                 .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PatchMapping("/update_field/{id}")
+    @PatchMapping("/{id}")
     ResponseEntity<Book> updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         return service.updateByField(id,fields)
                 .map(field -> new ResponseEntity<>(field,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> delete (@PathVariable Integer id){
         if(service.deleteBook(id)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

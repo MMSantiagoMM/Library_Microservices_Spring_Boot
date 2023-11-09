@@ -24,40 +24,40 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping("/get_one/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<User> getOne(@PathVariable Integer id){
         return service.getOne(id)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/get_all")
+    @GetMapping
     ResponseEntity<List<User>> getAll(){
         List<User> users = service.getAll();
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
-    @PostMapping("/insert")
+    @PostMapping
     ResponseEntity<User> createUser(@RequestBody UserDTO userDTO){
         User user = service.insert(userDTO);
         return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<User>update(@PathVariable Integer id, @RequestBody UserDTO newUser){
         return service.update(newUser,id)
                 .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PatchMapping("/update_field/{id}")
+    @PatchMapping("/{id}")
     ResponseEntity<User>updateByField(@PathVariable Integer id, @RequestBody Map<String, Object>fields){
         return service.updateByField(id,fields)
                 .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteUser(@PathVariable Integer id){
         if(service.deleteUser(id)){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

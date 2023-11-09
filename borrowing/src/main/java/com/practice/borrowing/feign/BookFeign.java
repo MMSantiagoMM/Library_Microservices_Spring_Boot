@@ -9,7 +9,7 @@ import java.util.List;
 
 @FeignClient(name = "book-service", url = "http://localhost:8081", path = "book")
 public interface BookFeign {
-    @GetMapping("/get_one/{id}")
+    @GetMapping("/{id}")
     Book getOne(@PathVariable Integer id);
 
     @GetMapping("/get_several/{values}")
