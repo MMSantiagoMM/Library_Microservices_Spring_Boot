@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "book-service", url = "http://localhost:8081", path = "library")
+@FeignClient(name = "book-service")
 public interface BookFeign {
-    @GetMapping("/get_one/{id}")
+    @GetMapping("book/get_one/{id}")
     Book getOne(@PathVariable Integer id);
 
-    @GetMapping("/get_several/{values}")
+    @GetMapping("book/get_several/{values}")
     List<Book> getSeveral(@PathVariable Integer[] values);
 
 

@@ -19,15 +19,9 @@ public class BookController {
     @Autowired
     private final BookService service;
 
-    @Autowired
-    private final BookRepository repository;
 
-
-
-
-    public BookController(BookService service, BookRepository repository) {
+    public BookController(BookService service) {
         this.service = service;
-        this.repository = repository;
     }
 
     @PostMapping("/create")

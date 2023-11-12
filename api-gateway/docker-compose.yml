@@ -19,7 +19,7 @@ services:
       - library-network
 
 
-  user-app:
+  user-service:
     image: user-service-image
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
@@ -27,6 +27,7 @@ services:
       - "8082:8082"
     networks:
       - library-network
+    restart: unless-stopped
     depends_on:
       - mysqldb
 
@@ -64,7 +65,7 @@ services:
       - library-network
 
 
-  book-app:
+  book-service:
     image: book-service-image
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
