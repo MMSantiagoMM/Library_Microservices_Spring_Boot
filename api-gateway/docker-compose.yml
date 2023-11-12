@@ -27,11 +27,8 @@ services:
       - "8082:8082"
     networks:
       - library-network
-    restart:
-      always
     depends_on:
       - mysqldb
-      - eureka-server
 
   mysqldb:
     image: mysql:latest
@@ -56,14 +53,13 @@ services:
       - library-network
     depends_on:
       - mongo_db
-      - eureka-server
 
   mongo_db:
     image: mongo:latest
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: mongodb
+      MONGO_INITDB_DATABASE: mongo_db
     networks:
       - library-network
 
@@ -81,7 +77,6 @@ services:
       - library-network
     depends_on:
       - postgres_db
-      - eureka-server
 
   postgres_db:
     image: postgres:latest
