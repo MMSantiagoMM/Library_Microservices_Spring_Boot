@@ -6,6 +6,8 @@ import com.practice.book.entity.Book;
 import com.practice.book.repository.BookRepository;
 import com.practice.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,48 +26,66 @@ public class BookController {
         this.service = service;
     }
 
-    @PostMapping("/create")
-    public String insert(@RequestBody BookDTO book){
-        return service.createBook(book);
+    @PostMapping
+    public ResponseEntity<Book> insert(@RequestBody BookDTO book){
+        Book newBook = service.createBook(book);
+        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get_books")
-    public List<Book> getAll(){
-        return service.getBooks();
+    @GetMapping
+    public ResponseEntity<List<Book>> getAll(){
+        List<Book> books = service.getBooks();
+        return new ResponseEntity<>(books,HttpStatus.OK);
     }
 
-    @GetMapping("/get_one/{id}")
-    Optional<Book>getOne(@PathVariable Integer id){
-        return service.getOneBook(id);
+    @GetMapping("/{id}")
+    ResponseEntity<Book>getOne(@PathVariable Integer id){
+        return service.getOneBook(id)
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/name/{title}")
-    Optional<Book>getName(@PathVariable String title){
-        return service.getByTitle(title);
+    @GetMapping("/{title}")
+    ResponseEntity<Book>getName(@PathVariable String title){
+        return service.getByTitle(title)
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/writer/{writer}")
-    Optional<Book>getWriter(@PathVariable String writer){
-        return service.getWriter(writer);
+    @GetMapping("/{writer}")
+    ResponseEntity<Book>getWriter(@PathVariable String writer){
+        return service.getWriter(writer)
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/get_several/{values}")
-    List<Book> getSeveral(@PathVariable Integer[] values){
-        return service.returnSeveral(values);
-    }
-    @PutMapping("/update/{id}")
-    Optional<Book>update(@RequestBody BookDTO newBook, @PathVariable Integer id){
-        return Optional.ofNullable(service.updateValue(newBook, id));
+    @GetMapping("get_several/{values}")
+    ResponseEntity<List<Book>> getSeveral(@PathVariable Integer[] values){
+        List<Book> books = service.returnSeveral(values);
+        return new ResponseEntity<>(books,HttpStatus.OK);
     }
 
-    @PatchMapping("/update_field/{id}")
-    Book updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
-        return service.updateByField(id,fields);
+    @PutMapping("/{id}")
+    ResponseEntity<Book>update(@RequestBody BookDTO newBook, @PathVariable Integer id){
+        return service.updateValue(newBook, id)
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("delete/{id}")
-    String delete (@PathVariable Integer id){
-        return service.deelteBook(id);
+    @PatchMapping("/{id}")
+    ResponseEntity<Book> updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+        return service.updateByField(id,fields)
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete (@PathVariable Integer id){
+        if(service.deleteBook(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

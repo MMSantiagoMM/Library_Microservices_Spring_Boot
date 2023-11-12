@@ -31,36 +31,46 @@ public class BorrowingController {
     private BookFileService bookFileService;
 
 
-    @GetMapping("/get_all")
-    List<Borrowing>getAll(){
-        return service.getAllBorrowings();
+    @GetMapping
+    ResponseEntity<List<Borrowing>>getAll(){
+        List<Borrowing> borrowings = service.getAllBorrowings();
+        return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
-    @GetMapping("/get_one/{id}")
-    Optional<Borrowing> getOne(@PathVariable Integer id){
-        return service.getOne(id);
+    @GetMapping("/{id}")
+    ResponseEntity<Borrowing> getOne(@PathVariable Integer id){
+        return service.getOne(id)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/insert")
-    String create(@RequestBody BorrowingDTO borrowingDTO){
-        return service.insert(borrowingDTO);
+    @PostMapping
+    ResponseEntity<Borrowing> create(@RequestBody BorrowingDTO borrowingDTO){
+        Borrowing borrowing = service.insert(borrowingDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
-    String update (@RequestBody BorrowingDTO newBorrowing, @PathVariable Integer id){
-        service.updateBorrowing(newBorrowing,id);
-        return "The borrowing was update successfully";
+    @PutMapping("/{id}")
+    ResponseEntity<Borrowing> update (@RequestBody BorrowingDTO newBorrowing, @PathVariable Integer id){
+        return service.updateBorrowing(newBorrowing,id)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.OK));
     }
 
-    @PatchMapping("/update_field/{id}")
-    String updateByField(@PathVariable Integer id, @RequestBody Map<String,Object>fields){
-        service.updateByField(id,fields);
-        return "The borrowing's field was updated";
+    @PatchMapping("/{id}")
+    ResponseEntity<Borrowing> updateByField(@PathVariable Integer id, @RequestBody Map<String,Object>fields){
+        return service.updateByField(id,fields)
+                .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/delete/{id}")
-    String delete(@PathVariable Integer id){
-        return service.deleteBorrowing(id);
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(@PathVariable Integer id){
+        if(service.deleteBorrowing(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/insert_book")

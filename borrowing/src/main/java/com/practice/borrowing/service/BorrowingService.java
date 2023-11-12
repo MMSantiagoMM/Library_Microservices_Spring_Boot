@@ -1,8 +1,5 @@
 package com.practice.borrowing.service;
 
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.practice.borrowing.dto.BorrowingDTO;
 import com.practice.borrowing.entity.Borrowing;
 import com.practice.borrowing.exceptions.BorrowingNotFoundException;
@@ -11,14 +8,8 @@ import com.practice.borrowing.feign.BookFeign;
 import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.swing.text.html.Option;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
@@ -52,17 +43,15 @@ public class BorrowingService {
                 ()->new BorrowingNotFoundException(id));
     }
 
-    public String insert(BorrowingDTO borrowingDTO){
+    public Borrowing insert(BorrowingDTO borrowingDTO){
         Borrowing borrowing = new Borrowing();
-        //borrowing.setId(borrowingDTO.getId());
         borrowing.setId(sequence.getSequenceNumber(Borrowing.SEQUENCE_NAME));
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
         borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));
         borrowing.setBeginingDate(LocalDate.now());
         borrowing.setEndDate(borrowing.getBeginingDate().plusDays(30));
         borrowing.setTotalPrice(calculateTotalPrice(borrowing));
-        repository.save(borrowing);
-        return "The borrowing was created successfully";
+        return repository.save(borrowing);
     }
 
     public Double calculateTotalPrice(Borrowing borrowing){
@@ -83,7 +72,7 @@ public class BorrowingService {
                 }).orElseThrow(() -> new BorrowingNotFoundException(id)));
     }
 
-    public Borrowing updateByField(Integer id, Map<String,Object> fields){
+    public Optional<Borrowing> updateByField(Integer id, Map<String,Object> fields){
         Optional<Borrowing> existingBorrowing = repository.findById(id);
         if(existingBorrowing.isPresent()){
             fields.forEach((key,value)->{
@@ -91,19 +80,19 @@ public class BorrowingService {
                 field.setAccessible(true);
                 ReflectionUtils.setField(field,existingBorrowing.get(),value);
             });
-            return repository.save(existingBorrowing.get());
+            return Optional.of(repository.save(existingBorrowing.get()));
         }
-        return null;
+        return Optional.empty();
     }
 
-    public String deleteBorrowing(Integer id){
+    public Boolean deleteBorrowing(Integer id){
         Optional<Borrowing> existBorrowing = repository.findById(id);
 
         if(existBorrowing.isPresent()){
             repository.delete(existBorrowing.get());
-            return "The borrowing was deleted successfully";
+            return true;
         }
-        return "Resource was not found";
+        return false;
     }
 
 

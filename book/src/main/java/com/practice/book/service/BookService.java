@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,9 +33,8 @@ public class BookService {
     }
 
 
-    public String createBook(BookDTO bookDTO){
-        repository.save(mapper.INSTANCE.toBook(bookDTO));
-        return "The book was create successfully";
+    public Book createBook(BookDTO bookDTO){
+        return repository.save(mapper.INSTANCE.toBook(bookDTO));
     }
 
     public List<Book> getBooks(){
@@ -57,8 +55,8 @@ public class BookService {
         return Optional.ofNullable(repository.findByWriter(writer));
     }
 
-    public Book updateValue(BookDTO newBook, Integer id){
-        return repository.findById(id)
+    public Optional<Book> updateValue(BookDTO newBook, Integer id){
+        return Optional.ofNullable(repository.findById(id)
                 .map(book -> {
                     book.setTitle(newBook.getTitle());
                     book.setWriter(newBook.getWriter());
@@ -66,20 +64,19 @@ public class BookService {
                     book.setPrice(newBook.getPrice());
                     return repository.save(book);
                 }).orElseThrow(()-> new BookNotFoundException(id) {
-                });
+                }));
     }
-    public String deelteBook(Integer id){
+    public Boolean deleteBook(Integer id){
 
         if(repository.findById(id).isEmpty()){
-            throw new BookNotFoundException(id) {
-            };
+            return false;
         }else{
             repository.deleteById(id);
-            return "The book was deleted successfully";
+            return true;
         }
     }
 
-    public Book updateByField(Integer id, Map<String, Object> fields){
+    public Optional<Book> updateByField(Integer id, Map<String, Object> fields){
         Optional<Book> existingBook = repository.findById(id);
         if(existingBook.isPresent()){
             fields.forEach((key,value)->{
@@ -87,9 +84,9 @@ public class BookService {
                 field.setAccessible(true);
                 ReflectionUtils.setField(field,existingBook.get(),value);
             });
-            return repository.save(existingBook.get());
+            return Optional.of(repository.save(existingBook.get()));
         }
-        return null;
+        return Optional.empty();
     }
 
     public List<Book> returnSeveral(Integer[]values){

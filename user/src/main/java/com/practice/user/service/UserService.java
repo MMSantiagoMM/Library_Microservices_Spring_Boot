@@ -39,9 +39,8 @@ public class UserService {
         return repository.findAll();
     }
 
-    public String insert(UserDTO userDTO) {
-        repository.save(mapper.toUser(userDTO));
-        return "The user was created correctly";
+    public User insert(UserDTO userDTO) {
+        return repository.save(mapper.toUser(userDTO));
     }
 
     public Optional<User> update(UserDTO userDTO, Integer id) {
@@ -71,13 +70,13 @@ public class UserService {
         return null;
     }
 
-    public String deleteUser(Integer id) {
+    public Boolean deleteUser(Integer id) {
         Optional<User> user = Optional.ofNullable(repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(id)));
         if(user.isPresent()){
             repository.deleteById(id);
-            return "User was deleted successfully";
+            return true;
         }
-        return "User doesn't found";
+        return false;
     }
 }
