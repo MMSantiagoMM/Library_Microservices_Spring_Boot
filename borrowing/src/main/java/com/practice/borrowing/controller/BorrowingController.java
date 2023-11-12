@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("borrowing")
 public class BorrowingController {
@@ -30,13 +31,14 @@ public class BorrowingController {
     @Autowired
     private BookFileService bookFileService;
 
-
+    @CrossOrigin
     @GetMapping
     ResponseEntity<List<Borrowing>>getAll(){
         List<Borrowing> borrowings = service.getAllBorrowings();
         return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     ResponseEntity<Borrowing> getOne(@PathVariable Integer id){
         return service.getOne(id)

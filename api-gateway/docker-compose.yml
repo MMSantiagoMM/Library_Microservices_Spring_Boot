@@ -3,7 +3,7 @@ services:
     build: .
     image: api-gateway-image
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
     ports:
       - "8080:8080"
     networks:
@@ -44,7 +44,7 @@ services:
       - library-network
 
 
-  borrowing-app:
+  borrowing-service:
     image: borrowing-service-image
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
