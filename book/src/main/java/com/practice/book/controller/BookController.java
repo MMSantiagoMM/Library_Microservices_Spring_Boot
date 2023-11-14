@@ -78,8 +78,8 @@ public class BookController {
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<Book> updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
-        return service.updateByField(id,fields)
+    ResponseEntity<Book> updateByField(@PathVariable Integer id, @RequestBody BookDTO updatedBook){
+        return service.updateByField(id,updatedBook)
                 .map(field -> new ResponseEntity<>(field,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
