@@ -78,20 +78,7 @@ public class BookService {
             return true;
         }
     }
-
-    /*public Optional<Book> updateByField(Integer id, Map<String, Object> fields){
-        Optional<Book> existingBook = repository.findById(id);
-        if(existingBook.isPresent()){
-            fields.forEach((key,value)->{
-                Field field = ReflectionUtils.findField(Book.class,key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field,existingBook.get(),value);
-            });
-            return Optional.of(repository.save(existingBook.get()));
-        }
-        return null;
-    }*/
-
+    
     public Optional<Book> updateByField(Integer id, BookDTO updatedBookDTO) {
         Optional<Book> existingBook = repository.findById(id);
         if (existingBook.isPresent()) {
