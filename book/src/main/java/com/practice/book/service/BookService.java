@@ -78,7 +78,7 @@ public class BookService {
             return true;
         }
     }
-    
+
     public Optional<Book> updateByField(Integer id, BookDTO updatedBookDTO) {
         Optional<Book> existingBook = repository.findById(id);
         if (existingBook.isPresent()) {
