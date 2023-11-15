@@ -7,14 +7,17 @@ import com.practice.borrowing.feign.Book;
 import com.practice.borrowing.feign.BookFeign;
 import com.practice.borrowing.feign.UserFeign;
 import com.practice.borrowing.repository.BorrowingRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BorrowingService {
@@ -72,17 +75,30 @@ public class BorrowingService {
                 }).orElseThrow(() -> new BorrowingNotFoundException(id)));
     }
 
-    public Optional<Borrowing> updateByField(Integer id, Map<String,Object> fields){
+    public Optional<Borrowing> updateByField(Integer id, BorrowingDTO updatedBorrowingDTO) {
         Optional<Borrowing> existingBorrowing = repository.findById(id);
-        if(existingBorrowing.isPresent()){
-            fields.forEach((key,value)->{
-                Field field = ReflectionUtils.findField(Borrowing.class,key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field,existingBorrowing.get(),value);
-            });
-            return Optional.of(repository.save(existingBorrowing.get()));
+        if (existingBorrowing.isPresent()) {
+            Borrowing existingBorrowingEntity = existingBorrowing.get();
+            BeanUtils.copyProperties(updatedBorrowingDTO, existingBorrowingEntity,
+                    getNullPropertyNames(updatedBorrowingDTO));
+            return Optional.of(repository.save(existingBorrowingEntity));
+        } else {
+            return Optional.empty();
         }
-        return Optional.empty();
+    }
+
+    private String[] getNullPropertyNames(Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<>();
+        for (PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 
     public Boolean deleteBorrowing(Integer id){

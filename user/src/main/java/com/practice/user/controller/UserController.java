@@ -53,8 +53,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<User>updateByField(@PathVariable Integer id, @RequestBody Map<String, Object>fields){
-        return service.updateByField(id,fields)
+    ResponseEntity<User>updateByField(@PathVariable Integer id,
+                                      @RequestBody UserDTO updatedUser){
+        return service.updateByField(id,updatedUser)
                 .map(user -> new ResponseEntity<>(user,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
