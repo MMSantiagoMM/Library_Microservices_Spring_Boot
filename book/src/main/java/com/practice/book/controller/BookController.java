@@ -21,15 +21,9 @@ public class BookController {
     @Autowired
     private final BookService service;
 
-    @Autowired
-    private final BookRepository repository;
 
-
-
-
-    public BookController(BookService service, BookRepository repository) {
+    public BookController(BookService service) {
         this.service = service;
-        this.repository = repository;
     }
 
     @PostMapping
@@ -39,8 +33,9 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAll(){
-        List<Book> books = service.getBooks();
+    public ResponseEntity<List<Book>> getAll(@RequestParam(required = false)String writer,
+                                             @RequestParam(required = false)String title){
+        List<Book>books = service.getBooks(writer,title);
         return new ResponseEntity<>(books,HttpStatus.OK);
     }
 
@@ -51,25 +46,22 @@ public class BookController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/name/{title}")
-    ResponseEntity<Book>getName(@PathVariable String title){
-        return service.getByTitle(title)
-                .map(name -> new ResponseEntity<>(name,HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
 
-    @GetMapping("/writer/{writer}")
-    ResponseEntity<Book>getWriter(@PathVariable String writer){
-        return service.getWriter(writer)
-                .map(name -> new ResponseEntity<>(name,HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/get_several/{values}")
-    ResponseEntity<List<Book>> getSeveral(@PathVariable Integer[] values){
+    @GetMapping("/get_several/")
+    ResponseEntity<List<Book>> getSeveral(@RequestParam List<Integer>values){
         List<Book> books = service.returnSeveral(values);
         return new ResponseEntity<>(books,HttpStatus.OK);
     }
+
+    @GetMapping("/maxPrice")
+    ResponseEntity<Book> getByPrices(){
+        return service.getBookMaxPrice()
+                .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+
     @PutMapping("/{id}")
     ResponseEntity<Book>update(@RequestBody BookDTO newBook, @PathVariable Integer id){
         return service.updateValue(newBook, id)
