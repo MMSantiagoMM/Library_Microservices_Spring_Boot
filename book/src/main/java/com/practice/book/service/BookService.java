@@ -35,27 +35,24 @@ public class BookService {
         this.mapper = mapper;
     }
 
-
     public Book createBook(BookDTO bookDTO){
         return repository.save(mapper.INSTANCE.toBook(bookDTO));
     }
 
-    public List<Book> getBooks(){
-        return repository.findAll();
+    public List<Book> getBooks(String writer, String title){
+        if(writer != null){
+            return repository.getByWriter(writer);
+        } else if (title != null) {
+            return repository.getByTitle(title);
+        }else{
+            return repository.findAll();
+        }
     }
 
     public Optional<Book>getOneBook(Integer id){
         return Optional.ofNullable(repository.findById(id).
                 orElseThrow(() -> new BookNotFoundException(id) {
         }));
-    }
-
-    public Optional<Book> getByTitle(String name){
-        return Optional.ofNullable(repository.findByTitle(name));
-    }
-
-    public Optional<Book>getWriter(String writer){
-        return Optional.ofNullable(repository.findByWriter(writer));
     }
 
     public Optional<Book> updateValue(BookDTO newBook, Integer id){
@@ -70,7 +67,6 @@ public class BookService {
                 }));
     }
     public Boolean deleteBook(Integer id){
-
         if(repository.findById(id).isEmpty()){
             return false;
         }else{
@@ -104,11 +100,12 @@ public class BookService {
         return emptyNames.toArray(result);
     }
 
+    public List<Book> returnSeveral(List<Integer>values){
+        return repository.findAllById(values);
+    }
 
-
-    public List<Book> returnSeveral(Integer[]values){
-        List<Integer> values2 = List.of(values);
-        return repository.findAllById(values2);
+    public Optional<Book> getBookMaxPrice(){
+        return Optional.ofNullable(repository.getBookWithMaxPrice());
     }
 
 }
