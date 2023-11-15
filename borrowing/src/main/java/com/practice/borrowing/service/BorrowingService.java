@@ -1,8 +1,7 @@
 package com.practice.borrowing.service;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+
 import com.practice.borrowing.dto.BorrowingDTO;
 import com.practice.borrowing.entity.Borrowing;
 import com.practice.borrowing.exceptions.BorrowingNotFoundException;
@@ -14,16 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.swing.text.html.Option;
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -56,7 +47,6 @@ public class BorrowingService {
 
     public Borrowing insert(BorrowingDTO borrowingDTO){
         Borrowing borrowing = new Borrowing();
-        //borrowing.setId(borrowingDTO.getId());
         borrowing.setId(sequence.getSequenceNumber(Borrowing.SEQUENCE_NAME));
         borrowing.setUser(userFeign.getOne(borrowingDTO.getUser()));
         borrowing.setBooks(bookFeign.getSeveral(borrowingDTO.getBooks()));

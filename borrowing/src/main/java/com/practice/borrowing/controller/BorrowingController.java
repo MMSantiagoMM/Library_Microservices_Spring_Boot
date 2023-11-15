@@ -60,7 +60,8 @@ public class BorrowingController {
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<Borrowing> updateByField(@PathVariable Integer id, @RequestBody BorrowingDTO updatedBorrowing){
+    ResponseEntity<Borrowing> updateByField(@PathVariable Integer id,
+                                            @RequestBody BorrowingDTO updatedBorrowing){
         return service.updateByField(id,updatedBorrowing)
                 .map(borrowing -> new ResponseEntity<>(borrowing,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
