@@ -3,28 +3,21 @@ package com.practice.book.controller;
 
 import com.practice.book.dto.BookDTO;
 import com.practice.book.entity.Book;
-import com.practice.book.repository.BookRepository;
 import com.practice.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("book")
 public class BookController {
 
     @Autowired
-    private final BookService service;
+    private BookService service;
 
-
-    public BookController(BookService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<Book> insert(@RequestBody BookDTO book){
@@ -54,7 +47,7 @@ public class BookController {
     }
 
     @GetMapping("/maxPrice")
-    ResponseEntity<Book> getByPrices(){
+    ResponseEntity<Book> getMaxPrice(){
         return service.getBookMaxPrice()
                 .map(book -> new ResponseEntity<>(book,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

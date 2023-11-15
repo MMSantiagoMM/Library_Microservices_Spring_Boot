@@ -37,7 +37,10 @@ public class UserService {
         return user;
     }
 
-    public List<User> getAll() {
+    public List<User> getAll(String nameUser) {
+        if(nameUser != null){
+            return repository.getByName(nameUser);
+        }
         return repository.findAll();
     }
 

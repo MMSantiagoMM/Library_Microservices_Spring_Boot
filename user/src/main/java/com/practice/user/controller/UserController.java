@@ -32,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping
-    ResponseEntity<List<User>> getAll(){
-        List<User> users = service.getAll();
+    ResponseEntity<List<User>> getAll(@RequestParam(required = false) String nameUser){
+        List<User> users = service.getAll(nameUser);
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
