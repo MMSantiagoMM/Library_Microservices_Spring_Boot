@@ -40,7 +40,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/get_several/")
+    @GetMapping("/get_several")
     ResponseEntity<List<Book>> getSeveral(@RequestParam List<Integer>values){
         List<Book> books = service.returnSeveral(values);
         return new ResponseEntity<>(books,HttpStatus.OK);

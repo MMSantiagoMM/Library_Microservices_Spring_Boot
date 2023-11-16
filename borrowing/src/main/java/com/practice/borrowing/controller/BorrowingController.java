@@ -33,8 +33,8 @@ public class BorrowingController {
 
 
     @GetMapping
-    ResponseEntity<List<Borrowing>>getAll(){
-        List<Borrowing> borrowings = service.getAllBorrowings();
+    ResponseEntity<List<Borrowing>>getAll(@RequestParam(required = false) String nameUser){
+        List<Borrowing> borrowings = service.getAllBorrowings(nameUser);
         return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
@@ -78,12 +78,12 @@ public class BorrowingController {
         }
     }
 
-    @PostMapping("/insert_book")
+    @PostMapping("/file")
     ResponseEntity<?> uploadBook(@RequestParam("file")MultipartFile file)throws IOException{
         return new ResponseEntity<>(bookFileService.addFile(file), HttpStatus.OK);
     }
 
-    @GetMapping("/download/{id}")
+    @GetMapping("/file/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
         BookFile loadFile = bookFileService.downloadFile(id);
         return ResponseEntity.ok()

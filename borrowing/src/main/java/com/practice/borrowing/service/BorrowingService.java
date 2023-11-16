@@ -34,9 +34,10 @@ public class BorrowingService {
     private SequenceGeneratorService sequence;
 
 
-
-
-    public List<Borrowing> getAllBorrowings(){
+    public List<Borrowing> getAllBorrowings(String nameUser){
+        if(nameUser != null){
+            return repository.findByUser(nameUser);
+        }
         return repository.findAll();
     }
 
@@ -109,10 +110,5 @@ public class BorrowingService {
         }
         return false;
     }
-
-
-
-
-
 
 }
