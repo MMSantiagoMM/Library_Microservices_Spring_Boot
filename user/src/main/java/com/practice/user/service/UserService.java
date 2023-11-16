@@ -20,16 +20,12 @@ import java.util.*;
 public class UserService {
 
     @Autowired
-    private final UserRepository repository;
+    private UserRepository repository;
 
     @Autowired
-    private final UserMapper mapper;
+    private UserMapper mapper;
 
 
-    public UserService(UserRepository repository, UserMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     public Optional<User> getOne(Integer id) {
         Optional<User> user = Optional.ofNullable(repository.findById(id).orElseThrow(() ->
@@ -37,7 +33,10 @@ public class UserService {
         return user;
     }
 
-    public List<User> getAll() {
+    public List<User> getAll(String name) {
+        if(name != null){
+            return repository.getByName(name);
+        }
         return repository.findAll();
     }
 

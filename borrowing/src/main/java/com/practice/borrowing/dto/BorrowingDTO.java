@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 @Data
@@ -16,6 +17,6 @@ public class BorrowingDTO {
 
     private Integer user;
 
-    private Integer[] books;
+    private List<Integer> books;
 
 }

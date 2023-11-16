@@ -37,7 +37,12 @@ public class BorrowingService {
 
 
 
-    public List<Borrowing> getAllBorrowings(){
+    public List<Borrowing> getAllBorrowings(String name, String title){
+        if(name != null){
+            return repository.findByUser(name);
+        } else if (title != null) {
+            return repository.findByBook(title);
+        }
         return repository.findAll();
     }
 

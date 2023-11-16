@@ -39,7 +39,12 @@ public class BookService {
         return repository.save(mapper.INSTANCE.toBook(bookDTO));
     }
 
-    public List<Book> getBooks(){
+    public List<Book> getBooks(String writer, String title){
+        if(writer != null){
+            return repository.getByWriter(writer);
+        } else if (title != null) {
+            return repository.getByTitle(title);
+        }
         return repository.findAll();
     }
 
@@ -49,13 +54,6 @@ public class BookService {
         }));
     }
 
-    public Optional<Book> getByTitle(String name){
-        return Optional.ofNullable(repository.findByTitle(name));
-    }
-
-    public Optional<Book>getWriter(String writer){
-        return Optional.ofNullable(repository.findByWriter(writer));
-    }
 
     public Optional<Book> updateValue(BookDTO newBook, Integer id){
         return Optional.ofNullable(repository.findById(id)
@@ -103,9 +101,8 @@ public class BookService {
         return emptyNames.toArray(result);
     }
 
-    public List<Book> returnSeveral(Integer[]values){
-        List<Integer> values2 = List.of(values);
-        return repository.findAllById(values2);
+    public List<Book> returnSeveral(List<Integer> values){
+        return repository.findAllById(values);
     }
 
 }

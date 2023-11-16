@@ -14,11 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 
 @RestController
@@ -33,8 +31,9 @@ public class BorrowingController {
 
     @CrossOrigin
     @GetMapping
-    ResponseEntity<List<Borrowing>>getAll(){
-        List<Borrowing> borrowings = service.getAllBorrowings();
+    ResponseEntity<List<Borrowing>>getAll(@RequestParam(required = false)String name,
+                                          @RequestParam(required = false)String title){
+        List<Borrowing> borrowings = service.getAllBorrowings(name, title);
         return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 
@@ -76,12 +75,12 @@ public class BorrowingController {
         }
     }
 
-    @PostMapping("/insert_book")
+    @PostMapping("/file")
     ResponseEntity<?> uploadBook(@RequestParam("file")MultipartFile file)throws IOException{
         return new ResponseEntity<>(bookFileService.addFile(file), HttpStatus.OK);
     }
 
-    @GetMapping("/download/{id}")
+    @GetMapping("/file/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
         BookFile loadFile = bookFileService.downloadFile(id);
 

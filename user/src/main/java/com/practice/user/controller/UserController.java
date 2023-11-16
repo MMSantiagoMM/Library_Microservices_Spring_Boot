@@ -20,11 +20,9 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private final UserService service;
+    private UserService service;
 
-    public UserController(UserService service) {
-        this.service = service;
-    }
+
 
     @GetMapping("/{id}")
     ResponseEntity<User> getOne(@PathVariable Integer id){
@@ -34,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping
-    ResponseEntity<List<User>> getAll(){
-        List<User> users = service.getAll();
+    ResponseEntity<List<User>> getAll(@RequestParam(required = false)String name){
+        List<User> users = service.getAll(name);
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
