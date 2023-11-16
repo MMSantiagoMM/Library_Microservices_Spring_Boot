@@ -34,9 +34,11 @@ public class BorrowingService {
     private SequenceGeneratorService sequence;
 
 
-    public List<Borrowing> getAllBorrowings(String nameUser){
+    public List<Borrowing> getAllBorrowings(String nameUser, String title){
         if(nameUser != null){
             return repository.findByUser(nameUser);
+        } else if (title != null) {
+            return repository.findByBook(title);
         }
         return repository.findAll();
     }

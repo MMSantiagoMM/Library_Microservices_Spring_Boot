@@ -33,8 +33,9 @@ public class BorrowingController {
 
 
     @GetMapping
-    ResponseEntity<List<Borrowing>>getAll(@RequestParam(required = false) String nameUser){
-        List<Borrowing> borrowings = service.getAllBorrowings(nameUser);
+    ResponseEntity<List<Borrowing>>getAll(@RequestParam(required = false) String nameUser,
+                                          @RequestParam(required = false) String title){
+        List<Borrowing> borrowings = service.getAllBorrowings(nameUser,title);
         return new ResponseEntity<>(borrowings,HttpStatus.OK);
     }
 

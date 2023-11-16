@@ -15,4 +15,7 @@ public interface BorrowingRepository extends MongoRepository<Borrowing,Integer> 
     @Query("{'user.name': ?0}")
     List<Borrowing> findByUser(String name);
 
+    @Query("{'books.title': ?0}")
+    List<Borrowing> findByBook(String title);
+
 }
