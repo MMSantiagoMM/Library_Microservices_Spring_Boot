@@ -27,7 +27,7 @@ public class BookFileService {
 
 
     public String addFile(MultipartFile upload) throws IOException {
-        if (!upload.getContentType().equals("application/pdf")) {
+        if (!upload.getContentType().equals(FileMessage.PDF_APPLICATION.getMessage())) {
             throw new IllegalArgumentException(FileMessage.INCORRECT_FILE.getMessage());
         }
         DBObject metadata = new BasicDBObject();
