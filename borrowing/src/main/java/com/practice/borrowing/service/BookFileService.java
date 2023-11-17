@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.practice.borrowing.entity.BookFile;
+import com.practice.borrowing.messages.FileMessage;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -26,6 +27,9 @@ public class BookFileService {
 
 
     public String addFile(MultipartFile upload) throws IOException {
+        if (!upload.getContentType().equals("application/pdf")) {
+            throw new IllegalArgumentException(FileMessage.INCORRECT_FILE.getMessage());
+        }
         DBObject metadata = new BasicDBObject();
         metadata.put("fileSize",upload.getSize());
 
